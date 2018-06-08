@@ -7,10 +7,10 @@
 	<artifactId>conzen-security</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
     <modules>
-        <module>core</module>
-        <module>app</module>
-        <module>browser</module>
-        <module>demo</module>
+        <module>conzen-security-core</module>
+        <module>conzen-security-app</module>
+        <module>conzen-security-browser</module>
+        <module>conzen-security-demo</module>
     </modules>
     <packaging>pom</packaging>
 
