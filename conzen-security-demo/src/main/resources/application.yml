@@ -6,6 +6,8 @@ spring:
     password: tang2017
   session:
     store-type: none
-security:
-  basic:
-    enabled: false
+
+conzen:
+  security:
+    browser:
+      login-page: /demo-login.html # TODO 不加/会无限重定向
