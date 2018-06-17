@@ -1,5 +1,6 @@
 package com.conzen.security.core.validate.code;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -7,8 +8,9 @@ import java.time.LocalDateTime;
  * @Date: 2018/6/10 上午1:35
  * @Description: 图形验证码
  **/
-public class ValidateCode {
+public class ValidateCode implements Serializable {
 
+    private static final long serialVersionUID = -4299321105211812592L;
     private String code;
 
     private LocalDateTime expireTime;
@@ -16,6 +18,11 @@ public class ValidateCode {
     public ValidateCode(String code, int expireIn) {
         this.code = code;
         this.expireTime = LocalDateTime.now().plusSeconds(expireIn);
+    }
+
+    public ValidateCode(String code, LocalDateTime expireTime) {
+        this.code = code;
+        this.expireTime = expireTime;
     }
 
     public boolean isExpired() {

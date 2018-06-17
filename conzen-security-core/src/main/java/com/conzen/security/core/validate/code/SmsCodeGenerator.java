@@ -16,7 +16,7 @@ import java.util.Random;
  * @Date: 2018/6/10 下午6:11
  * @Description: 短信验证码生成器
  **/
-@Component
+@Component("smsValidateCodeGenerator")
 public class SmsCodeGenerator implements ValidateCodeGenerator {
 
     @Autowired

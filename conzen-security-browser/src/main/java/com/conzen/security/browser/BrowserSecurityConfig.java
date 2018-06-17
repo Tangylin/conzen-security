@@ -1,7 +1,10 @@
 package com.conzen.security.browser;
 
+import com.conzen.security.browser.session.ConzenExpiredSessionStrategy;
+import com.conzen.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
+import com.conzen.security.core.properties.SecurityConstants;
 import com.conzen.security.core.properties.SecurityProperties;
-import com.conzen.security.core.validate.code.ValidateCodeFilter;
+import com.conzen.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
 
@@ -39,6 +45,24 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
+    @Autowired
+    private ValidateCodeSecurityConfig validateCodeSecurityConfig;
+
+    @Autowired
+    private SpringSocialConfigurer conzenSocialSecurityConfig;
+
+    @Autowired
+    private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
+
+    @Autowired
+    private InvalidSessionStrategy invalidSessionStrategy;
+
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -54,30 +78,50 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
-        validateCodeFilter.setAuthenticationFailureHandler(simpleAuthenticationFailureHandler);
-        validateCodeFilter.setSecurityProperties(securityProperties);
-        validateCodeFilter.afterPropertiesSet();
+//        applyPasswordAuthenticationConfig(http);
 
         // 表单登录验证
-        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin()
-                    .loginPage("/authentication/require")
-                    .loginProcessingUrl("/authentication/form")
-                    .successHandler(simpleAuthenticationSuccessHandler)
-                    .failureHandler(simpleAuthenticationFailureHandler)
-                    .and()
-                .rememberMe()
-                    .tokenRepository(persistentTokenRepository())
-                    .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
-                    .userDetailsService(userDetailsService)
-                    .and()
-                .authorizeRequests()
-                .antMatchers("/authentication/require",
-                        "/code/*",
-                        securityProperties.getBrowser().getLoginPage()).permitAll()
-                .anyRequest()
-                .authenticated()
-                .and().csrf().disable();
+        http.apply(smsCodeAuthenticationSecurityConfig)
+                .and()
+            .apply(validateCodeSecurityConfig)
+                .and()
+            .apply(conzenSocialSecurityConfig)
+                .and()
+            .formLogin()
+                .loginPage(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
+                .loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM)
+                .successHandler(simpleAuthenticationSuccessHandler)
+                .failureHandler(simpleAuthenticationFailureHandler)
+                .and()
+            .rememberMe()
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
+                .userDetailsService(userDetailsService)
+                .and()
+            .sessionManagement()
+                .invalidSessionStrategy(invalidSessionStrategy)
+                .maximumSessions(securityProperties.getBrowser().getSession().getMaximumSessions())
+                .maxSessionsPreventsLogin(securityProperties.getBrowser().getSession().isMaxSessionsPreventsLogin())
+                .expiredSessionStrategy(sessionInformationExpiredStrategy)
+                .and()
+                .and()
+            .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(logoutSuccessHandler)
+                .deleteCookies("JSESSIONID")
+                .and()
+            .authorizeRequests()
+                .antMatchers(
+                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
+                        securityProperties.getBrowser().getLoginPage(),
+                        securityProperties.getBrowser().getLogoutPage(),
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".json",
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".html")
+                .permitAll()
+            .anyRequest()
+            .authenticated()
+            .and().csrf().disable();
     }
 }

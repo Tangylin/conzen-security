@@ -1,6 +1,7 @@
 package com.conzen.security.browser;
 
 import com.conzen.security.browser.suport.SimpleResponse;
+import com.conzen.security.core.properties.SecurityConstants;
 import com.conzen.security.core.properties.SecurityProperties;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +41,7 @@ public class BrowserSecurityController {
      * @param response
      * @return
      */
-    @RequestMapping("/authentication/require")
+    @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -55,5 +57,4 @@ public class BrowserSecurityController {
         return new SimpleResponse("访问的服务需要身份认证，请引导用户登录");
 
     }
-
 }

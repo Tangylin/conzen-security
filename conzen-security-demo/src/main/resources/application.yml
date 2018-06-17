@@ -6,14 +6,31 @@ spring:
     password: tang2017
   session:
     store-type: none
+server:
+  session:
+    timeout: 3600
+logging:
+  level:
+    org.springframework.socail: debug
 
-#conzen:
-#  security:
-#    browser:
+conzen:
+  security:
+    browser:
 #      login-page: /demo-login.html # TODO 不加/会无限重定向
 #      login-type: JSON
+       logout-page: /demo-logout.html
 #    code:
 #      image:
 #        width: 200
 #        height: 60
 #        urls: /user,/user/*
+    social:
+      weixin:
+        provider-id: weixin
+        app-id: wxfcba7e4cbc7a491b
+        app-secret: 3f4d9644269f44037bc771f178d96789
+      qq:
+        provider-id: qq
+        app-id: 101484342
+        app-secret: 74ec2e515128b06ee58804aac0e3177d
+      filter-processes-url: /auth

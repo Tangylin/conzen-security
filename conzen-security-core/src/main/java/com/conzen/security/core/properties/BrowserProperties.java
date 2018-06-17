@@ -16,9 +16,16 @@ public class BrowserProperties {
     private LoginType loginType = LoginType.JSON;
 
     /**
+     * 退出页
+     */
+    private String logoutPage;
+
+    /**
      * 记住我保持时间，秒
      */
     private int rememberMeSeconds = 3600;
+
+    private SessionProperties session = new SessionProperties();
 
     public String getLoginPage() {
         return loginPage;
@@ -42,5 +49,21 @@ public class BrowserProperties {
 
     public void setRememberMeSeconds(int rememberMeSeconds) {
         this.rememberMeSeconds = rememberMeSeconds;
+    }
+
+    public SessionProperties getSession() {
+        return session;
+    }
+
+    public void setSession(SessionProperties session) {
+        this.session = session;
+    }
+
+    public String getLogoutPage() {
+        return logoutPage;
+    }
+
+    public void setLogoutPage(String logoutPage) {
+        this.logoutPage = logoutPage;
     }
 }
