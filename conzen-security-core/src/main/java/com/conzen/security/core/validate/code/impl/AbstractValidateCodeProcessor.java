@@ -18,10 +18,9 @@ import java.util.Map;
  **/
 public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> implements ValidateCodeProcessor {
 
-    /**
-     * 操作session的工具类
-     */
-    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+    @Autowired
+    private ValidateCodeRepository validateCodeRepository;
+
     /**
      * 收集系统中所有的 {@link ValidateCodeGenerator} 接口的实现。
      */
@@ -60,17 +59,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      */
     private void save(ServletWebRequest request, C validateCode) {
         ValidateCode code = new ValidateCode(validateCode.getCode(), validateCode.getExpireTime());
-        sessionStrategy.setAttribute(request, getSessionKey(request), code);
-    }
-
-    /**
-     * 构建验证码放入session时的key
-     *
-     * @param request
-     * @return
-     */
-    private String getSessionKey(ServletWebRequest request) {
-        return SESSION_KEY_PREFIX + getValidateCodeType(request).toString().toUpperCase();
+        validateCodeRepository.save(request, code, getValidateCodeType(request));
     }
 
     /**
@@ -98,9 +87,8 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     public void validate(ServletWebRequest request) {
 
         ValidateCodeType processorType = getValidateCodeType(request);
-        String sessionKey = getSessionKey(request);
 
-        C codeInSession = (C) sessionStrategy.getAttribute(request, sessionKey);
+        C codeInSession = (C) validateCodeRepository.get(request, processorType);
 
         String codeInRequest;
         try {
@@ -119,7 +107,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
         }
 
         if (codeInSession.isExpired()) {
-            sessionStrategy.removeAttribute(request, sessionKey);
+            validateCodeRepository.remove(request, processorType);
             throw new ValidateCodeException(processorType + "验证码已过期");
         }
 
@@ -127,7 +115,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
             throw new ValidateCodeException(processorType + "验证码不匹配");
         }
 
-        sessionStrategy.removeAttribute(request, sessionKey);
+        validateCodeRepository.remove(request, processorType);
     }
 
 }

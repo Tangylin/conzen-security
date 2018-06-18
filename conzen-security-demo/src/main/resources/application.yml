@@ -11,7 +11,8 @@ server:
     timeout: 3600
 logging:
   level:
-    org.springframework.socail: debug
+#    org.springframework: debug
+
 
 conzen:
   security:
@@ -19,6 +20,7 @@ conzen:
 #      login-page: /demo-login.html # TODO 不加/会无限重定向
 #      login-type: JSON
        logout-page: /demo-logout.html
+       sign-up-url: /demo-signUp.html
 #    code:
 #      image:
 #        width: 200
@@ -28,9 +30,17 @@ conzen:
       weixin:
         provider-id: weixin
         app-id: wxfcba7e4cbc7a491b
-        app-secret: 3f4d9644269f44037bc771f178d96789
+        app-secret: 0eed4198a78988bfdbc04493e79022b1
       qq:
         provider-id: qq
         app-id: 101484342
         app-secret: 74ec2e515128b06ee58804aac0e3177d
       filter-processes-url: /auth
+    oauth2:
+      clients[0]:
+        client-id: conzen
+        client-secret: 123456
+        access-token-validity-seconds: 3600
+      clients[1]:
+        client-id: less
+        client-secret: 123456

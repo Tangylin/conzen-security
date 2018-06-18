@@ -1,4 +1,4 @@
-package com.conzen.security.browser.suport;
+package com.conzen.security.core.suport;
 
 /**
  * Created by Less on 2018/6/9.

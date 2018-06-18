@@ -13,7 +13,7 @@ public class User {
     public interface UserDetailView extends UserSimpleView {};
 
     @JsonView(UserSimpleView.class)
-    private String name;
+    private String username;
 
     @JsonView(UserDetailView.class)
     private String password;

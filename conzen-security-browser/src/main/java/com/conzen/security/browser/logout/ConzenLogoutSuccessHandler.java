@@ -1,12 +1,10 @@
 package com.conzen.security.browser.logout;
 
-import com.conzen.security.browser.suport.SimpleResponse;
-import com.conzen.security.core.properties.SecurityProperties;
+import com.conzen.security.core.suport.SimpleResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 

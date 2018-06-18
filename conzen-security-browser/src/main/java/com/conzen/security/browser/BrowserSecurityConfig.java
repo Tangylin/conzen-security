@@ -1,6 +1,5 @@
 package com.conzen.security.browser;
 
-import com.conzen.security.browser.session.ConzenExpiredSessionStrategy;
 import com.conzen.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.conzen.security.core.properties.SecurityConstants;
 import com.conzen.security.core.properties.SecurityProperties;
@@ -11,8 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -64,11 +61,6 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     private LogoutSuccessHandler logoutSuccessHandler;
 
     @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
         tokenRepository.setDataSource(dataSource);
@@ -116,9 +108,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                         SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
                         securityProperties.getBrowser().getLoginPage(),
                         securityProperties.getBrowser().getLogoutPage(),
+                        securityProperties.getBrowser().getSignUpUrl(),
                         SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
                         securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".json",
-                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".html")
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".html",
+                        "/user/register")
                 .permitAll()
             .anyRequest()
             .authenticated()

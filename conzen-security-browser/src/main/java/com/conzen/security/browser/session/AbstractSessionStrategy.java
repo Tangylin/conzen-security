@@ -1,6 +1,6 @@
 package com.conzen.security.browser.session;
 
-import com.conzen.security.browser.suport.SimpleResponse;
+import com.conzen.security.core.suport.SimpleResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

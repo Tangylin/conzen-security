@@ -21,6 +21,11 @@ public class BrowserProperties {
     private String logoutPage;
 
     /**
+     * 注册页
+     */
+    private String signUpUrl = "/comzen-signUp.html";
+
+    /**
      * 记住我保持时间，秒
      */
     private int rememberMeSeconds = 3600;
@@ -65,5 +70,13 @@ public class BrowserProperties {
 
     public void setLogoutPage(String logoutPage) {
         this.logoutPage = logoutPage;
+    }
+
+    public String getSignUpUrl() {
+        return signUpUrl;
+    }
+
+    public void setSignUpUrl(String signUpUrl) {
+        this.signUpUrl = signUpUrl;
     }
 }

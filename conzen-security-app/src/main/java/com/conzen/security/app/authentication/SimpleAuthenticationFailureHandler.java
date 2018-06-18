@@ -1,4 +1,4 @@
-package com.conzen.security.browser.authentication;
+package com.conzen.security.app.authentication;
 
 import com.conzen.security.core.suport.SimpleResponse;
 import com.conzen.security.core.properties.LoginType;
