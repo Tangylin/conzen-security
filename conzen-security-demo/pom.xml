@@ -12,14 +12,19 @@
     <artifactId>conzen-security-demo</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.conzen.security</groupId>
+            <artifactId>conzen-security-browser</artifactId>
+            <version>${conzen.security.version}</version>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>com.conzen.security</groupId>-->
-            <!--<artifactId>conzen-security-browser</artifactId>-->
+            <!--<artifactId>conzen-security-app</artifactId>-->
             <!--<version>${conzen.security.version}</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>com.conzen.security</groupId>
-            <artifactId>conzen-security-app</artifactId>
+            <artifactId>conzen-security-authorize</artifactId>
             <version>${conzen.security.version}</version>
         </dependency>
         <dependency>

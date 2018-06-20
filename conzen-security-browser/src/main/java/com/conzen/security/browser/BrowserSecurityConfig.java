@@ -1,6 +1,7 @@
 package com.conzen.security.browser;
 
 import com.conzen.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
+import com.conzen.security.core.authorize.AuthorizeConfigManager;
 import com.conzen.security.core.properties.SecurityConstants;
 import com.conzen.security.core.properties.SecurityProperties;
 import com.conzen.security.core.validate.code.ValidateCodeSecurityConfig;
@@ -60,6 +61,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private LogoutSuccessHandler logoutSuccessHandler;
 
+    @Autowired
+    private AuthorizeConfigManager authorizeConfigManager;
+
     @Bean
     PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
@@ -101,21 +105,24 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessHandler(logoutSuccessHandler)
                 .deleteCookies("JSESSIONID")
-                .and()
-            .authorizeRequests()
-                .antMatchers(
-                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
-                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
-                        securityProperties.getBrowser().getLoginPage(),
-                        securityProperties.getBrowser().getLogoutPage(),
-                        securityProperties.getBrowser().getSignUpUrl(),
-                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
-                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".json",
-                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".html",
-                        "/user/register")
-                .permitAll()
-            .anyRequest()
-            .authenticated()
+//                .and()
+//            .authorizeRequests()
+//                .antMatchers(
+//                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+//                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
+//                        securityProperties.getBrowser().getLoginPage(),
+//                        securityProperties.getBrowser().getLogoutPage(),
+//                        securityProperties.getBrowser().getSignUpUrl(),
+//                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
+//                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".json",
+//                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".html",
+//                        "/user/register")
+//                .permitAll()
+//            .anyRequest()
+//            .authenticated()
             .and().csrf().disable();
+
+        authorizeConfigManager.config(http.authorizeRequests());
+
     }
 }

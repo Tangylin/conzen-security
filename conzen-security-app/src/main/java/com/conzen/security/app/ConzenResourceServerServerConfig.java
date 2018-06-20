@@ -2,6 +2,7 @@ package com.conzen.security.app;
 
 import com.conzen.security.core.authentication.openid.OpenIdAuthenticationSecurityConfig;
 import com.conzen.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
+import com.conzen.security.core.authorize.AuthorizeConfigManager;
 import com.conzen.security.core.properties.SecurityConstants;
 import com.conzen.security.core.properties.SecurityProperties;
 import com.conzen.security.core.validate.code.ValidateCodeSecurityConfig;
@@ -13,6 +14,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.social.security.SpringSocialConfigurer;
+
+import javax.naming.ldap.PagedResultsControl;
 
 /**
  * @Author: Less
@@ -44,6 +47,9 @@ public class ConzenResourceServerServerConfig extends ResourceServerConfigurerAd
     @Autowired
     private SpringSocialConfigurer conzenSocialSecurityConfig;
 
+    @Autowired
+    private AuthorizeConfigManager authorizeConfigManager;
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
 
@@ -62,22 +68,24 @@ public class ConzenResourceServerServerConfig extends ResourceServerConfigurerAd
                 .loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM)
                 .successHandler(simpleAuthenticationSuccessHandler)
                 .failureHandler(simpleAuthenticationFailureHandler)
-                .and()
-                .authorizeRequests()
-                .antMatchers(
-                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
-                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
-                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_OPENID,
-                        securityProperties.getBrowser().getLoginPage(),
-                        securityProperties.getBrowser().getLogoutPage(),
-                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
-                        securityProperties.getBrowser().getSession().getSessionInvalidUrl() + ".json",
-                        securityProperties.getBrowser().getSession().getSessionInvalidUrl() + ".html",
-                        "/user/register", "/social/signUp")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers(
+//                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+//                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
+//                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_OPENID,
+//                        securityProperties.getBrowser().getLoginPage(),
+//                        securityProperties.getBrowser().getLogoutPage(),
+//                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
+//                        securityProperties.getBrowser().getSession().getSessionInvalidUrl() + ".json",
+//                        securityProperties.getBrowser().getSession().getSessionInvalidUrl() + ".html",
+//                        "/user/register", "/social/signUp")
+//                .permitAll()
+//                .anyRequest()
+//                .authenticated()
                 .and().csrf().disable();
+
+        authorizeConfigManager.config(http.authorizeRequests());
     }
 
 }

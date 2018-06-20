@@ -11,7 +11,8 @@
         <module>conzen-security-app</module>
         <module>conzen-security-browser</module>
         <module>conzen-security-demo</module>
-    </modules>
+		<module>conzen-security-authorize</module>
+	</modules>
     <packaging>pom</packaging>
 
 	<name>conzen-security</name>
