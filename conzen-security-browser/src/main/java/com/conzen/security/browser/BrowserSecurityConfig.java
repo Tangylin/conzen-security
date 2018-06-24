@@ -105,21 +105,21 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessHandler(logoutSuccessHandler)
                 .deleteCookies("JSESSIONID")
-//                .and()
-//            .authorizeRequests()
-//                .antMatchers(
-//                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
-//                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
-//                        securityProperties.getBrowser().getLoginPage(),
-//                        securityProperties.getBrowser().getLogoutPage(),
-//                        securityProperties.getBrowser().getSignUpUrl(),
-//                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
-//                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".json",
-//                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".html",
-//                        "/user/register")
-//                .permitAll()
-//            .anyRequest()
-//            .authenticated()
+                .and()
+            .authorizeRequests()
+                .antMatchers(
+                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
+                        securityProperties.getBrowser().getLoginPage(),
+                        securityProperties.getBrowser().getLogoutPage(),
+                        securityProperties.getBrowser().getSignUpUrl(),
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".json",
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl()+".html",
+                        "/user/register")
+                .permitAll()
+            .anyRequest()
+            .authenticated()
             .and().csrf().disable();
 
         authorizeConfigManager.config(http.authorizeRequests());
